@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { CreateCategoryDto } from "../../domain/dtos/category/create-category.dto";
-import { UpdateCategoryDto } from "../../domain/dtos/category/update-category.dto";
-import { DeleteCategoryDto } from "../../domain/dtos/category/delete-category.dto";
-import { FindOneCategoryDto } from "../../domain/dtos/category/findone-category.dto";
+import { UpdateCategoryDto } from '../../domain/dtos/category/update-category.dto';
 import { CategoryService } from "../services/category.service";
+import { Validators } from '../../config/validator';
+import { PaginationDto } from '../../domain/dtos/shared/pagination.dto';
 
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService){}
@@ -17,45 +17,39 @@ export class CategoryController {
   };
 
   update = (req: Request, res: Response) => {
-    const [error, updateCategory] = UpdateCategoryDto.update(req.body);
-    if(error) return res.status(400).json({ error });
-  
-    if (!updateCategory) {
-      return res.status(400).json({ error: "Update data is missing or invalid" });
-    }
-  
-    this.categoryService.update(updateCategory)
-      .then(category => res.json(category))
-      .catch(error => res.status(500).json(error));
-  };
-
-  delete = (req: Request, res: Response) => {
-    const [error, deleteCategory] = DeleteCategoryDto.delete(req.body);
-    if(error) return res.status(400).json({ error });
-
-    if(!deleteCategory) {
-      return res.status(400).json({ error: "Delete data is missing or invalid" });
-    }
-
-    this.categoryService.delete(deleteCategory)
-      .then(category => res.json(category))
-      .catch(error => res.status(500).json(error))
-  };
-
-  findAll = (req: Request, res: Response) => {
-    return res.json({ message: "category create" });
-  };
-
-  findOne = (req: Request, res: Response) => {
-    const [error, findOneCategory] = FindOneCategoryDto.findOne(req.body);	
-    if(error) return res.status(400).json({ error });
-
-    if(!findOneCategory) {
-      return res.status(400).json({ error: "Find data is missing or invalid" });
-    }
-
-    this.categoryService.findOne(findOneCategory)
+    const id = req.params.id
+    if(!Validators.validationMongoId(id)) throw Error('mongo id is not valid')
+    const [error, updateCategoryDto] = UpdateCategoryDto.update(req.body)
+    this.categoryService.update(updateCategoryDto!, id!)
     .then(category => res.json(category))
     .catch(error => res.status(500).json(error))
-  };
+
+  }
+
+  delete = (req: Request, res: Response) => {
+    const id = req.params.id
+    if(!Validators.validationMongoId(id)) throw Error('mongo id is not valid')
+    
+      this.categoryService.delete(id!)
+      .then(category => res.json(category))
+      .catch(error => res.status(500).json(error))
+    }
+
+  findAll = (req: Request, res: Response) => {
+    const [, paginationDto] = PaginationDto.create( req.query )
+    
+    this.categoryService.findAll(paginationDto!)
+    .then(category => res.json(category))
+    .catch(error => res.status(500).json(error))
+  }
+
+
+  findOne = (req: Request, res: Response) => {
+    const id = req.params.id
+    if(!Validators.validationMongoId(id)) throw Error('mongo id is not valid')
+    
+      this.categoryService.findOne(id!)
+      .then(category => res.json(category))
+      .catch(error => res.status(500).json(error))
+  }
 }
