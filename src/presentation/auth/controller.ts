@@ -15,8 +15,7 @@ export class AuthController{
 
         this.authService.register( registerUserDto! )
             .then( user => res.json( user ) )
-            .catch( error => res.status(500).json( error ) );
-        
+            .catch( error => res.status(500).json( error ) );        
     }
 
     login = (req: Request, res: Response) => {
