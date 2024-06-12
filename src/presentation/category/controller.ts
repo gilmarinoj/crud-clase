@@ -20,6 +20,7 @@ export class CategoryController {
     const id = req.params.id
     if (!Validators.validationMongoId(id)) throw Error('mongo id is not valid')
     const [error, updateCategoryDto] = UpdateCategoryDto.update(req.body)
+    if(error) return res.status(400).json({ error })
     this.categoryService.update(updateCategoryDto!, id!)
       .then(category => res.json(category))
       .catch(error => res.status(500).json(error))

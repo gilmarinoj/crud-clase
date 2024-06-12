@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Roles } from '../../../domain/entities/roles/roles';
 
 const userSchema = new mongoose.Schema(
     {
@@ -13,8 +14,9 @@ const userSchema = new mongoose.Schema(
             type: String,
         },
         roles:{
-            type: Array<String>,
-            default: ['USER_ROLE'],
+            type: [String],
+            enum: Object.values(Roles),
+            default: ['ADMIN_ROLE'],
         },
         img:{
             type: String,

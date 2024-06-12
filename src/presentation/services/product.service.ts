@@ -49,6 +49,7 @@ export class ProductService {
       throw error
     }
   }
+  
   async findAll(paginationDto: PaginationDto): Promise<ProductEntity[]> {
     const { offset, limit } = paginationDto
     try {

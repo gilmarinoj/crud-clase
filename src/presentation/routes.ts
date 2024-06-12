@@ -14,7 +14,7 @@ export class AppRoute{
         routes.use('/api/auth', AuthRoutes.routes );
         routes.use('/api/professor', ProfessorRoutes.routes);
         routes.use('/api/upload', UploadFileRoutes.routes);
-    
+        
         return routes;
     }
 }

@@ -49,6 +49,7 @@ export class CategoryService {
       throw error
     }
   }
+  
   async findAll(paginationDto: PaginationDto): Promise<CategoryEntity[]> {
     const { offset, limit } = paginationDto
     try {

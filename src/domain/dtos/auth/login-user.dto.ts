@@ -12,7 +12,7 @@ export class LoginUserDto{
         if (!email) { return ['Missing email', undefined];};
         if (!Validators.email.test(email)) { return ['Invalid email', undefined];};
         if (!password) { return ['Missing password', undefined];};
-        if (!Validators.password.test(password)) { return ['Invalid password', undefined]; };
+        // if (!Validators.password.test(password)) { return ['Invalid password', undefined]; };
 
         return [undefined, new LoginUserDto(email, password)];
     }

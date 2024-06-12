@@ -19,7 +19,7 @@ export class AuthService{
             
             await user.save();
 
-            return UserMaper.fromEntity(user);
+            return UserMaper.fromJSON(user);
         }catch(error){
             throw error;
         }
@@ -32,9 +32,9 @@ export class AuthService{
             const user = await UserModel.findOne({ email });
             if (!user) throw Error("error");
 
-            const token = await JwtAdapter.generateToken( user.id );
+            const token = await JwtAdapter.generateToken( {id: user.id} );
             if (!token) throw new Error("Token no generado");
-            return { token, user:UserMaper.fromEntity(user) };
+            return { token, user:UserMaper.fromJSON(user) };
         }catch(error){
             throw error;
         };
